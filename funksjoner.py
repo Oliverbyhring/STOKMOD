@@ -1,5 +1,6 @@
 import random 
 import numpy as np 
+import matplotlib.pyplot as plt
 
 
 
@@ -44,15 +45,29 @@ def compareToAnalytic(initState, endState, timeSteps):
     return onePercentCount/1000, fivePercentCount/1000
 
 
+def markovChainSimulation(population, recoverProb, endTime): 
+    susceptible = np.zeros(endTime+1)
+    infested = np.zeros(endTime+1)
+    recovered = np.zeros(endTime+1)
+    susceptible[0] = population-50
+    infested[0] = 50
+    gamma = recoverProb
+    timeList = np.arange(0,endTime+1)
+    for i in range (1,endTime+1):
+        beta = 0.5 * infested[i-1] / population
+        newInfested = np.random.binomial(susceptible[i-1],beta)
+        newRecovered = np.random.binomial(infested[i-1],gamma)
+        susceptible[i] = susceptible[i-1]-newInfested
+        infested[i] = infested[i-1]+newInfested-newRecovered
+        recovered[i] = recovered[i-1]+newRecovered
+    return timeList, susceptible, infested, recovered
 
-
-
-
-                
-
-
-
-
-
-
-
+def plotIllness(List1,List2,List3,List4):
+    plt.figure()
+    plt.plot(List1,List2,'y-', label = 'Susceptible')
+    plt.plot(List1,List3,'r-', label = 'Infested')
+    plt.plot(List1,List4,'g-', label = 'Recovered')
+    plt.legend()
+    plt.xlabel('Time, T')
+    plt.ylabel('People, #')
+    plt.show()
