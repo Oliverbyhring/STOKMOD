@@ -52,7 +52,6 @@ def markovChainSimulation(population, recoverProb, endTime):
     susceptible[0] = population-50
     infested[0] = 50
     gamma = recoverProb
-    timeList = np.arange(0,endTime+1)
     for i in range (1,endTime+1):
         beta = 0.5 * infested[i-1] / population
         newInfested = np.random.binomial(susceptible[i-1],beta)
@@ -60,7 +59,7 @@ def markovChainSimulation(population, recoverProb, endTime):
         susceptible[i] = susceptible[i-1]-newInfested
         infested[i] = infested[i-1]+newInfested-newRecovered
         recovered[i] = recovered[i-1]+newRecovered
-    return timeList, susceptible, infested, recovered
+    return  susceptible, infested, recovered
 
 def plotIllness(List1,List2,List3,List4):
     plt.figure()
@@ -71,3 +70,21 @@ def plotIllness(List1,List2,List3,List4):
     plt.xlabel('Time, T')
     plt.ylabel('People, #')
     plt.show()
+
+
+def manySimulations(population,recoverProb, endTime, numberOfSimulations):
+    maxNumbIll = 0
+    maxTimeList = np.zeros(numberOfSimulations)
+    for i in range(numberOfSimulations):
+        maxTime = 0
+        maxVal = 0
+        S,I,R = markovChainSimulation(population,recoverProb,endTime)
+        maxVal = max(I)
+        maxTime = np.where(I==maxVal)
+        maxTimeList[i]=maxTime[0][0]
+        if maxVal>maxNumbIll:
+            maxNumbIll=maxVal
+    AvgMaxTime = sum(maxTimeList)/len(maxTimeList)
+    return maxNumbIll, AvgMaxTime
+
+

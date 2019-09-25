@@ -5,7 +5,7 @@ import funksjoner as func
 a = func.expectedTransitionTime(0,1, 1000)
 b = func.expectedTransitionTime(1,2, 1000)
 
-print(a,b)
+#print(a,b)
 
 
 #percentages_01 = func.compareToAnalytic(0,1,1000)
@@ -30,7 +30,11 @@ fivePercentages_12 = [0,0,0]
 #     print('1-2: For timesteps = ', timeSteps[ii], ' we have ', fivePercentages_12 , ' in the 5 perc interval')
 
 
+endTime = 200
+T = np.arange(0,endTime+1)
+S,I,R = func.markovChainSimulation(1000,0.2,endTime)
+#func.plotIllness(T,S,I,R)
 
+maxNumberOfIll, averageTimeToPeak = func.manySimulations(1000,0.2,endTime,1000)
+print("The maximum number of Ill people is",maxNumberOfIll,"\nThe average time the peak occurs is",averageTimeToPeak)
 
-T,S,I,R = func.markovChainSimulation(1000,0.2,200)
-func.plotIllness(T,S,I,R)
